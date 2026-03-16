@@ -71,21 +71,39 @@
   <iframe id="app-frame" src="https://script.google.com/macros/s/AKfycbzfTVMbUjQYbV0ADCXBbXKjD8UXZKC64s5dvt93dUMIE2K5FmzIkd2xJ_Ime7iilEXMDw/exec" onload="finishSplash()"></iframe>
 
   <script>
-   const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(window.location.search);
   const cleanUrl = window.location.origin + window.location.pathname;
 
-  // LOGIKA LOGOUT YANG AMAN (HANYA SEKALI JALAN)
+  // JIKA DETEKSI MAU LOGOUT
   if (urlParams.get('logout') === 'true') {
-    // Arahkan ke logout Google, tapi beritahu Google untuk balik ke URL BERSIH (tanpa parameter logout)
-    const logoutUrl = "https://accounts.google.com/Logout?continue=" + encodeURIComponent(cleanUrl);
-    window.location.href = logoutUrl;
+    // Ubah tampilan splash screen jadi pesan konfirmasi logout agar tidak Error 400
+    document.getElementById('splash-screen').innerHTML = `
+      <div style="text-align:center; color:white; font-family:sans-serif; padding:20px;">
+        <img src="https://drive.google.com/thumbnail?id=1p3ucC2P6VUqle4izxSQUw8sZMAwsk_9J&sz=w500" style="width:80px; margin-bottom:20px;">
+        <h2 style="margin-bottom:10px;">Ganti Akun Google?</h2>
+        <p style="font-size:14px; opacity:0.9; margin-bottom:30px;">Klik tombol di bawah untuk keluar dan pilih akun baru.</p>
+        <a href="https://accounts.google.com/Logout?continue=${encodeURIComponent(cleanUrl)}" 
+           style="background:white; color:#F2C94C; padding:15px 35px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+           KELUAR SEKARANG
+        </a>
+        <br><br>
+        <a href="${cleanUrl}" style="color:white; font-size:12px; opacity:0.7; text-decoration:none;">Batal</a>
+      </div>
+    `;
+    // Stop loading iframe kalau lagi mode logout
+    document.getElementById('app-frame').remove();
   }
 
   function finishSplash() {
-    // Tambahkan delay sedikit agar iframe benar-benar siap
-    setTimeout(() => {
-      const frame = document.getElementById('app-frame');
-      frame.classList.add('visible');
+    if (!urlParams.has('logout')) {
+      setTimeout(() => {
+        document.getElementById('app-frame').classList.add('visible');
+        setTimeout(() => {
+          document.getElementById('splash-screen').classList.add('hidden');
+        }, 150);
+      }, 2300);
+    }
+  }
       
       setTimeout(() => {
         document.getElementById('splash-screen').classList.add('hidden');
