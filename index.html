@@ -80,13 +80,18 @@
     }
 
     function finishSplash() {
-      setTimeout(() => {
-        document.getElementById('app-frame').classList.add('visible');
-        setTimeout(() => {
-          document.getElementById('splash-screen').classList.add('hidden');
-        }, 120);
-      }, 2300); 
-    }
+  const frame = document.getElementById('app-frame');
+  // Menambahkan timestamp agar URL iframe selalu dianggap baru oleh browser
+  const cleanUrl = frame.src.split('?')[0];
+  frame.src = cleanUrl + "?t=" + new Date().getTime();
+
+  setTimeout(() => {
+    frame.classList.add('visible');
+    setTimeout(() => {
+      document.getElementById('splash-screen').classList.add('hidden');
+    }, 120);
+  }, 2300); 
+}
   </script>
 </body>
 </html>
