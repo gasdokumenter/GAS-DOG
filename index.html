@@ -1,22 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Redirecting...</title>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>GAS Dokumenter</title>
+  
+  <style>
+    * { box-sizing: border-box; }
+    body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #F2C94C; }
+    
+    #splash-screen {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      /* BACKGROUND TETAP SESUAI SETTINGANMU */
+      background-image: url('https://drive.google.com/thumbnail?id=1Ib42zmpyOBi0o35hBHGf0lkJ7KhH1X4b&sz=w1500');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 100% 100% !important;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+
+    .brand-wrapper { display: flex; align-items: center; gap: 12px; z-index: 10; margin-top: -30px; }
+    .logo-container { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+    #hati-logo { width: 54px; z-index: 2; }
+    
+    .svg-loader { position: absolute; width: 64px; height: 64px; transform: rotate(-90deg); z-index: 3; }
+    .circle-draw { 
+      fill: none; stroke: #FFFFFF; stroke-width: 3.2; stroke-linecap: round; 
+      stroke-dasharray: 195; stroke-dashoffset: 195; 
+      animation: draw 1.6s cubic-bezier(0.65, 0, 0.35, 1) forwards; 
+      animation-delay: 0.3s; 
+    }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+
+    #ruby-text { height: 54px; object-fit: contain; }
+
+    .footer-text { 
+      position: absolute; bottom: 65px; width: 85%; text-align: center; 
+      color: white; font-size: 8px; line-height: 1.5; opacity: 0.9; 
+      font-family: sans-serif; letter-spacing: 0.2px; 
+    }
+
+    #app-frame { position: fixed; top: 0; left: 0; border: none; width: 100%; height: 100%; opacity: 0; z-index: 1; }
+    .visible { opacity: 1 !important; transition: opacity 0.5s ease; }
+    .hidden { opacity: 0; visibility: hidden; transition: opacity 0.5s ease; }
+  </style>
 </head>
 <body>
-    <script>
-        // Masukkan URL Web App GAS kamu di sini
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbx38UbK-AjEQl-2tFgMK3QVXbbYYXEdV7htYvdEe3Am_8XdUUIGhn7XE5kOchP7pyKVeQ/exec";
-        
-        // Cek apakah user mau logout atau login
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('logout')) {
-            // Redirect ke Logout Google lalu balik ke GAS
-            window.location.href = "https://accounts.google.com/Logout?continue=" + encodeURIComponent(GAS_URL);
-        } else {
-            // Langsung buka GAS
-            window.location.href = GAS_URL;
-        }
-    </script>
+
+  <div id="splash-screen">
+    <div class="brand-wrapper">
+      <div class="logo-container">
+        <svg class="svg-loader" viewBox="0 0 64 64">
+          <circle class="circle-draw" cx="32" cy="32" r="31" />
+        </svg>
+        <img id="hati-logo" src="https://drive.google.com/thumbnail?id=1p3ucC2P6VUqle4izxSQUw8sZMAwsk_9J&sz=w500">
+      </div>
+      <img id="ruby-text" src="https://drive.google.com/thumbnail?id=1Qv9WabWHfZJZ8KH2-1qnseAA_4RERvB6&sz=w500">
+    </div>
+    
+    <div class="footer-text">
+      Dibuat untuk mempermudah dan mempersingkat segalanya<br>
+      agar bisa mencari dan menemukan tujuan hidup yang berarti
+    </div>
+  </div>
+
+  <iframe id="app-frame" src="https://script.google.com/macros/s/AKfycbx38UbK-AjEQl-2tFgMK3QVXbbYYXEdV7htYvdEe3Am_8XdUUIGhn7XE5kOchP7pyKVeQ/exec" onload="finishSplash()"></iframe>
+
+  <script>
+    // --- LOGIKA PENDUKUNG SWITCH ACCOUNT ---
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.has('logout')) {
+      // Jika URL-nya: namarepo.github.io/?logout=true
+      // Maka paksa logout Google, lalu balik lagi ke link GitHub ini
+      const cleanUrl = window.location.href.split('?')[0];
+      window.location.href = "https://accounts.google.com/Logout?continue=" + encodeURIComponent(cleanUrl);
+    }
+
+    // --- LOGIKA SPLASH SCREEN (SESUAI SETTINGANMU) ---
+    function finishSplash() {
+      setTimeout(() => {
+        document.getElementById('app-frame').classList.add('visible');
+        setTimeout(() => {
+          document.getElementById('splash-screen').classList.add('hidden');
+        }, 120);
+      }, 2300); // Waktu splash screen muncul
+    }
+  </script>
 </body>
 </html>
