@@ -74,16 +74,33 @@
   const urlParams = new URLSearchParams(window.location.search);
   const cleanUrl = window.location.origin + window.location.pathname;
 
-  // JIKA MODE LOGOUT/GANTI AKUN AKTIF
+  // JIKA DETEKSI MAU GANTI AKUN (?logout=true)
   if (urlParams.get('logout') === 'true') {
-    // 1. Kirim user ke halaman ganti akun Google secara murni (Biar Gak Error 400)
-    // 2. Kita tidak pakai ?continue= agar Google tidak memblokir
-    window.location.href = "https://accounts.google.com/AccountChooser";
+    document.body.innerHTML = `
+      <div style="background:#F2C94C; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif; text-align:center; padding:20px;">
+        <img src="https://drive.google.com/thumbnail?id=1p3ucC2P6VUqle4izxSQUw8sZMAwsk_9J&sz=w500" style="width:80px; margin-bottom:20px;">
+        <h2 style="color:white; margin-bottom:10px;">Ganti Akun Google</h2>
+        <p style="color:white; opacity:0.9; margin-bottom:25px; font-size:14px;">1. Klik 'PILIH AKUN' (tab baru akan terbuka)<br>2. Pilih akun Google kamu di sana<br>3. Jika sudah, kembali ke sini dan klik 'MASUK LAGI'</p>
+        
+        <a href="https://accounts.google.com/AccountChooser" target="_blank" 
+           style="background:white; color:#F2C94C; padding:15px 35px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block; box-shadow:0 4px 15px rgba(0,0,0,0.2); margin-bottom:15px;">
+           1. PILIH AKUN
+        </a>
+        
+        <a href="${cleanUrl}" 
+           style="background:rgba(255,255,255,0.2); color:white; padding:12px 25px; border-radius:30px; text-decoration:none; font-weight:bold; display:inline-block; font-size:14px;">
+           2. MASUK LAGI
+        </a>
+      </div>
+    `;
+    // Hapus iframe biar nggak jalan di background
+    const frame = document.getElementById('app-frame');
+    if(frame) frame.remove();
   }
 
-  // LOGIKA STANDAR SPLASH SCREEN
+  // LOGIKA STANDAR UNTUK SPLASH SCREEN
   function finishSplash() {
-    if (!urlParams.has('logout')) {
+    if (urlParams.get('logout') !== 'true') {
       setTimeout(() => {
         const frame = document.getElementById('app-frame');
         if (frame) {
