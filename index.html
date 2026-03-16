@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting...</title>
+</head>
+<body>
+    <script>
+        // Masukkan URL Web App GAS kamu di sini
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbx38UbK-AjEQl-2tFgMK3QVXbbYYXEdV7htYvdEe3Am_8XdUUIGhn7XE5kOchP7pyKVeQ/exec";
+        
+        // Cek apakah user mau logout atau login
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('logout')) {
+            // Redirect ke Logout Google lalu balik ke GAS
+            window.location.href = "https://accounts.google.com/Logout?continue=" + encodeURIComponent(GAS_URL);
+        } else {
+            // Langsung buka GAS
+            window.location.href = GAS_URL;
+        }
+    </script>
+</body>
+</html>
