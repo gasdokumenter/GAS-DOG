@@ -74,14 +74,16 @@
   const urlParams = new URLSearchParams(window.location.search);
   const cleanUrl = window.location.origin + window.location.pathname;
 
+  // JIKA MODE LOGOUT/GANTI AKUN AKTIF
   if (urlParams.get('logout') === 'true') {
-    // Link sakti: Langsung pilih akun baru dan balik ke web kamu
-    const switchUrl = "https://accounts.google.com/AccountChooser?continue=" + encodeURIComponent(cleanUrl);
-    window.location.href = switchUrl;
+    // 1. Kirim user ke halaman ganti akun Google secara murni (Biar Gak Error 400)
+    // 2. Kita tidak pakai ?continue= agar Google tidak memblokir
+    window.location.href = "https://accounts.google.com/AccountChooser";
   }
 
+  // LOGIKA STANDAR SPLASH SCREEN
   function finishSplash() {
-    if (urlParams.get('logout') !== 'true') {
+    if (!urlParams.has('logout')) {
       setTimeout(() => {
         const frame = document.getElementById('app-frame');
         if (frame) {
