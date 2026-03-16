@@ -69,24 +69,23 @@
   <iframe id="app-frame" src="https://script.google.com/macros/s/AKfycbzfTVMbUjQYbV0ADCXBbXKjD8UXZKC64s5dvt93dUMIE2K5FmzIkd2xJ_Ime7iilEXMDw/exec" onload="finishSplash()"></iframe>
 
   <script>
-    // --- LOGIKA PENDUKUNG SWITCH ACCOUNT ---
-    const urlParams = new URLSearchParams(window.location.search);
-    
+   const urlParams = new URLSearchParams(window.location.search);
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxGqDz-Q3R5PzQUw850bfjI6yX23iVwq7v0_38HEk6Mgs-AShjpfOtavqEVEx5cMDieXg/exec";
+
+    // Jika ada parameter logout, kita bersihkan session dulu
     if (urlParams.has('logout')) {
-      // Jika URL-nya: namarepo.github.io/?logout=true
-      // Maka paksa logout Google, lalu balik lagi ke link GitHub ini
-      const cleanUrl = window.location.href.split('?')[0];
-      window.location.href = "https://accounts.google.com/Logout?continue=" + encodeURIComponent(cleanUrl);
+      // Kita pakai link logout yang berbeda agar tidak Error 400
+      // Link ini akan memaksa Google untuk keluar dari semua akun
+      window.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=" + encodeURIComponent(window.location.href.split('?')[0]);
     }
 
-    // --- LOGIKA SPLASH SCREEN (SESUAI SETTINGANMU) ---
     function finishSplash() {
       setTimeout(() => {
         document.getElementById('app-frame').classList.add('visible');
         setTimeout(() => {
           document.getElementById('splash-screen').classList.add('hidden');
         }, 120);
-      }, 2300); // Waktu splash screen muncul
+      }, 2300); 
     }
   </script>
 </body>
