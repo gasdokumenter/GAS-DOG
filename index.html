@@ -72,28 +72,26 @@
 
   <script>
    const urlParams = new URLSearchParams(window.location.search);
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxGqDz-Q3R5PzQUw850bfjI6yX23iVwq7v0_38HEk6Mgs-AShjpfOtavqEVEx5cMDieXg/exec";
+  const cleanUrl = window.location.origin + window.location.pathname;
 
-    // Jika ada parameter logout, kita bersihkan session dulu
-    if (urlParams.has('logout')) {
-      // Kita pakai link logout yang berbeda agar tidak Error 400
-      // Link ini akan memaksa Google untuk keluar dari semua akun
-      window.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=" + encodeURIComponent(window.location.href.split('?')[0]);
-    }
+  // LOGIKA LOGOUT YANG AMAN (HANYA SEKALI JALAN)
+  if (urlParams.get('logout') === 'true') {
+    // Arahkan ke logout Google, tapi beritahu Google untuk balik ke URL BERSIH (tanpa parameter logout)
+    const logoutUrl = "https://accounts.google.com/Logout?continue=" + encodeURIComponent(cleanUrl);
+    window.location.href = logoutUrl;
+  }
 
-    function finishSplash() {
-  const frame = document.getElementById('app-frame');
-  // Menambahkan timestamp agar URL iframe selalu dianggap baru oleh browser
-  const cleanUrl = frame.src.split('?')[0];
-  frame.src = cleanUrl + "?t=" + new Date().getTime();
-
-  setTimeout(() => {
-    frame.classList.add('visible');
+  function finishSplash() {
+    // Tambahkan delay sedikit agar iframe benar-benar siap
     setTimeout(() => {
-      document.getElementById('splash-screen').classList.add('hidden');
-    }, 120);
-  }, 2300); 
-}
+      const frame = document.getElementById('app-frame');
+      frame.classList.add('visible');
+      
+      setTimeout(() => {
+        document.getElementById('splash-screen').classList.add('hidden');
+      }, 150);
+    }, 2500); 
+  }
     if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
   }
